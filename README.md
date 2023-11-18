@@ -1,4 +1,4 @@
-テンプレート
+CloudFront+CloudFront Functionsを使ってリダイレクトをCDK使って実装するよ
 
 # 構成
 

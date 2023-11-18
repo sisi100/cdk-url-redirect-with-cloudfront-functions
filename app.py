@@ -7,7 +7,12 @@ app = cdk.App()
 stack = cdk.Stack(app, "cdk-url-redirect-stack")
 
 # バケットを作成する
-bucket = s3.Bucket(stack, "Bucket", block_public_access=s3.BlockPublicAccess.BLOCK_ALL)
+bucket = s3.Bucket(
+    stack,
+    "DummyBucket",
+    block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+    removal_policy=cdk.RemovalPolicy.DESTROY,
+)
 
 cf_function = cloudfront.Function(stack, "Function", code=cloudfront.FunctionCode.from_file(file_path="function.js"))
 
@@ -18,7 +23,9 @@ distribution = cloudfront.Distribution(
     default_behavior=cloudfront.BehaviorOptions(
         origin=origins.S3Origin(bucket),
         function_associations=[
-            cloudfront.FunctionAssociation(function=cf_function, event_type=cloudfront.FunctionEventType.VIEWER_REQUEST)
+            cloudfront.FunctionAssociation(
+                function=cf_function, event_type=cloudfront.FunctionEventType.VIEWER_REQUEST
+            ),
         ],
     ),
     default_root_object="index.html",
